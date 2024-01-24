@@ -99,7 +99,20 @@ class TutorialPipeline:
 
 > 还需要前往`tutorial\settings.py`解注释`DOWNLOADER_MIDDLEWARES`配置
 
+### 增加代理配置
 
+```py
+    def process_request(self, request, spider):
+        IP_LISt = [
+            "https://182.34.21.37:40042" 
+        ]
+        request.meta["proxy"] = random.choice(IP_LISt)
+        return None
+```
+
+> 还需要前往`tutorial\settings.py`解注释`DOWNLOADER_MIDDLEWARES`配置
+> 解注释`DOWNLOAD_DELAY`配置（请求设置延迟(默认:0)）
+> 更改`ROBOTSTXT_OBEY`配置为False（关闭遵守robots.txt规则）
 
 
 

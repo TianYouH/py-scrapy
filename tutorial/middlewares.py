@@ -75,6 +75,10 @@ class TutorialDownloaderMiddleware:
             "Windows10 / Opera 63.0.3368.43 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36 OPR/63.0.3368.43",
             "Windows10 / Edge 44.18362.1.0 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362",
         ]
+        IP_LISt = [
+            "https://182.34.21.37:40042" 
+        ]
+        request.meta["proxy"] = random.choice(IP_LISt)
         request.headers["User-Agent"] = random.choice(USER_AGENT_LIST)
         return None
 
