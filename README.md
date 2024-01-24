@@ -35,7 +35,7 @@
         if next_url is not None:
             yield scrapy.Request("https://quotes.toscrape.com" + next_url)
 ```
-执行脚本并导出json`scrapy crawl  quotes -O test.json`
+执行脚本并导出json`scrapy crawl quotes -O test.json`
 
 ### 使用 Items 结构
 
@@ -79,5 +79,27 @@ class TutorialPipeline:
 ```
 
 > 还需要前往`tutorial\settings.py`解注释`ITEM_PIPELINES`配置
+
+## 使用Middlewares
+
+### 修改请求头User_Agent
+
+```PY
+    # tutorial\middlewares.py
+    def process_request(self, request, spider):
+        USER_AGENT_LIST = [
+            "Windows10 / Chrome 75.0.3770.142 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36",
+            "Windows10 / Firefox 69.0b15 Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0",
+            "Windows10 / Opera 63.0.3368.43 Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36 OPR/63.0.3368.43",
+            "Windows10 / Edge 44.18362.1.0 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362",
+        ]
+        request.headers["User-Agent"] = random.choice(USER_AGENT_LIST)
+        return None
+```
+
+> 还需要前往`tutorial\settings.py`解注释`DOWNLOADER_MIDDLEWARES`配置
+
+
+
 
 
