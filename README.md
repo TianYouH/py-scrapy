@@ -20,6 +20,7 @@
 
 将地址更新为要爬网站地址，便携初代测试代码
 ```python
+    # tutorial/spiders/quotes.py
     start_urls = ["https://quotes.toscrape.com/page/1/"]
 
     def parse(self, response):
@@ -47,7 +48,7 @@ class TutorialItem(scrapy.Item):
     author = scrapy.Field()
     tags = scrapy.Field()
 ```
-# 使用
+使用
 ```py
 # tutorial/spiders/quotes.py
 from tutorial.items import TutorialItem
@@ -59,3 +60,24 @@ for quote in response.xpath("//div[@class='quote']"):
     tutorial_item['tags'] = quote.xpath("./div[@class='tags']/a[@class='tag']/text()").getall()
     yield tutorial_item
 ```
+
+### 将数据导入Mongodb
+
+配置
+```py
+# tutorial\pipelines.py
+from pymongo import MongoClient
+
+class TutorialPipeline:
+    def __init__(self):
+        self.client = MongoClient('localhost', 27017)
+        self.db = self.client['quotes']
+    def process_item(self, item, spider):
+        self.db.quotes.insert_one(dict(item))
+        pass
+        # return item
+```
+
+> 还需要前往`tutorial\settings.py`解注释`ITEM_PIPELINES`配置
+
+
