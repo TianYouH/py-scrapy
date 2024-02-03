@@ -1,11 +1,14 @@
 import scrapy
-
 from douban.items import MovieItem
 
 class DoubanSpider(scrapy.Spider):
     name = "douban"
     allowed_domains = ["movie.douban.com"]
-    start_urls = ["https://movie.douban.com/top250"]
+
+    def start_requests(self):
+        for i in range(0, 10):
+            url = f"https://movie.douban.com/top250?start={i*25}"
+            yield scrapy.Request(url)
 
     def parse(self, response):
         list_items = response.css("#content > div > div.article > ol > li")
