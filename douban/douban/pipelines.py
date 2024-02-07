@@ -32,9 +32,12 @@ class DBPipeline:
                                     password="123456", database="spider", 
                                     charset="utf8")
         self.cursor = self.conn.cursor()
+        self.data = []
 
     def close_spider(self, spider):
-        self.conn.commit()
+        # self.conn.commit()
+        if len(self.data) > 0:
+            self._write_to_db()
         self.conn.close()
 
     def process_item(self, item, spider):
@@ -42,6 +45,18 @@ class DBPipeline:
         rate = item.get("rate", 0)
         comment = item.get("comment", "")
         quote = item.get("quote", "")
+        '''
+        # 保存到(单条)数据库
         self.cursor.execute("insert into tp_top_movie (title, rate, comment, quote) values(%s, %s, %s, %s)", 
                             (title, rate, comment, quote))
+        '''
+        # 保存到(批量)数据库
+        self.data.append((title, rate, comment, quote))
+        if len(self.data) >= 100:
+            self._write_to_db()
+            self.data.clear()
         return item
+
+    def _write_to_db(self):
+        self.cursor.executemany("insert into tp_top_movie (title, rate, comment, quote) values(%s, %s, %s, %s)", self.data)
+        self.conn.commit()
