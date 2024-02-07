@@ -55,6 +55,16 @@ class DoubanSpiderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
 
+# 将cookies字符串转换为字典
+def get_cookies_dict(cookies):
+    cookies_dict = {}
+    for cookie in cookies.split(";"):
+        key, value = cookie.split("=", 1)
+        cookies_dict[key] = value
+    return cookies_dict
+
+cookies_str='ll="118245"; bid=UxTmV2w0cDE; _pk_ref.100001.8cb4=%5B%22%22%2C%22%22%2C1707302611%2C%22https%3A%2F%2Fcn.bing.com%2F%22%5D; _pk_id.100001.8cb4=aecdd600ac1cc134.1707302611.; _pk_ses.100001.8cb4=1; __utma=30149280.1748020854.1706885974.1706971324.1707302612.3; __utmc=30149280; __utmz=30149280.1707302612.3.2.utmcsr=cn.bing.com|utmccn=(referral)|utmcmd=referral|utmcct=/; ap_v=0,6.0; push_noty_num=0; push_doumail_num=0; __utmv=30149280.19194; ck=qZJi; ps=y; __utmt=1; __utmb=30149280.5.10.1707302612'
+COOKIES_DICT = get_cookies_dict(cookies_str)
 
 class DoubanDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -78,6 +88,10 @@ class DoubanDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+        # 设置cookies 记得去settings.py中设置COOKIES_ENABLED = True 否则不生效
+        # 还要启用 DOWNLOADER_MIDDLEWARES = {'douban.middlewares.DoubanDownloaderMiddleware': 543,}
+        # request.cookies = COOKIES_DICT
+        # request.mateta['proxy'] = "http://"
         return None
 
     def process_response(self, request, response, spider):
