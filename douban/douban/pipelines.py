@@ -15,13 +15,13 @@ class ExcelPipeline:
         self.wb = openpyxl.Workbook()
         self.sheet = self.wb.active
         self.sheet.title = "豆瓣电影Top250"
-        self.sheet.append(["电影名", "评分", "评价人数", "描述"])
+        self.sheet.append(["电影名", "评分", "评价人数", "描述", "时长", "简介"])
 
     def close_spider(self, spider):
         self.wb.save("豆瓣电影Top250.xlsx")
 
     def process_item(self, item, spider):
-        line = [item["title"], item["rate"], item["comment"], item["quote"]]
+        line = [item["title"], item["rate"], item["comment"], item["quote"], item.get("duration", ""), item.get("intro", "")]
         self.sheet.append(line)
         return item
 
